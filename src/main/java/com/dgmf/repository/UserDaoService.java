@@ -10,31 +10,32 @@ import java.util.List;
 @Component
 public class UserDaoService {
     private static final List<User> users = new ArrayList<>();
+    private static Long userCount = 0L;
 
     static {
         users.addAll(List.of(
                 User.builder()
-                        .id(1L)
+                        .id(++userCount)
                         .name("Adam")
                         .birthDate(LocalDate.now().minusYears(30))
                         .build(),
                 User.builder()
-                        .id(2L)
+                        .id(++userCount)
                         .name("Guy")
                         .birthDate(LocalDate.now().minusYears(25))
                         .build(),
                 User.builder()
-                        .id(3L)
+                        .id(++userCount)
                         .name("Manuella")
                         .birthDate(LocalDate.now().minusYears(20))
                         .build(),
                 User.builder()
-                        .id(4L)
+                        .id(++userCount)
                         .name("Eve")
                         .birthDate(LocalDate.now().minusYears(10))
                         .build(),
                 User.builder()
-                        .id(5L)
+                        .id(++userCount)
                         .name("Jim")
                         .birthDate(LocalDate.now().minusYears(40))
                         .build()
@@ -49,5 +50,12 @@ public class UserDaoService {
         return users.stream().filter(user -> user.getId().equals(userId)).findFirst().orElseThrow(
                 () -> new RuntimeException("User Not Found with the Given Id : " + userId)
         );
+    }
+
+    public User save(User user) {
+        user.setId(++userCount);
+        users.add(user);
+
+        return user;
     }
 }
