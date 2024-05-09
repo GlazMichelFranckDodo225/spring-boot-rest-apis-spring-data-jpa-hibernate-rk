@@ -4,6 +4,7 @@ import com.dgmf.entity.User;
 import com.dgmf.repository.UserDaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,5 +18,11 @@ public class UserResourceController {
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
         return userDaoService.findAll();
+    }
+
+    // Retrieve User By Id REST API
+    @GetMapping("/users/{id}")
+    public User retrieveUserById(@PathVariable("id") Long userId) {
+        return userDaoService.findOne(userId);
     }
 }

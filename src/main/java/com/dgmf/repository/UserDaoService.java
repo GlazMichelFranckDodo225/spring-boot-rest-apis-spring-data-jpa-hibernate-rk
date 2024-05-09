@@ -44,4 +44,10 @@ public class UserDaoService {
     public List<User> findAll() {
         return users;
     }
+
+    public User findOne(Long userId) {
+        return users.stream().filter(user -> user.getId().equals(userId)).findFirst().orElseThrow(
+                () -> new RuntimeException("User Not Found with the Given Id : " + userId)
+        );
+    }
 }
