@@ -1,6 +1,7 @@
 package com.dgmf.controller;
 
 import com.dgmf.entity.User;
+import com.dgmf.exception.UserNotFoundException;
 import com.dgmf.repository.UserDaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,15 @@ public class UserResourceController {
     // Retrieve User By Id REST API
     @GetMapping("/users/{id}")
     public User retrieveUserById(@PathVariable("id") Long userId) {
-        return userDaoService.findOne(userId);
+        User user = userDaoService.findOne(userId);
+
+        if(user == null) {
+            throw new UserNotFoundException(
+                    "User Not Found with the Given Id : " + userId
+            );
+        }
+
+        return user;
     }
 
     // Create User REST API

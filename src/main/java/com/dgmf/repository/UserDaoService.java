@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Component
 public class UserDaoService {
@@ -48,9 +49,10 @@ public class UserDaoService {
     }
 
     public User findOne(Long userId) {
-        return users.stream().filter(user -> user.getId().equals(userId)).findFirst().orElseThrow(
-                () -> new RuntimeException("User Not Found with the Given Id : " + userId)
-        );
+        Predicate<? super User> predicate = user -> user.getId().equals(userId);
+
+        return users.stream().filter(predicate).findFirst().orElse(null);
+                // .orElseThrow(() -> new RuntimeException("User Not Found with the Given Id : " + userId))
     }
 
     public User save(User user) {
