@@ -12,6 +12,7 @@ public class UserDaoService {
     private static final List<User> users = new ArrayList<>();
     private static Long userCount = 0L;
 
+    // Whenever the Server Restart, this Code will be Executed
     static {
         users.addAll(List.of(
                 User.builder()
