@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     // Our Own General Custom Exception Handler
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllException(
+    public final ResponseEntity<ErrorDetails> handleAllExceptions(
             Exception ex, WebRequest request
     ) throws Exception
     {
@@ -25,6 +25,21 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false)
         );
 
-        return new ResponseEntity(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // Our Own Specific Custom Exception Handler ==> UserNotFound Exception
+    @ExceptionHandler(UserNotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handleUserNotFoundException(
+            Exception ex, WebRequest request
+    ) throws Exception
+    {
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
     }
 }
