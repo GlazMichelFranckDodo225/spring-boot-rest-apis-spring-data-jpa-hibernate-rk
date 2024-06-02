@@ -48,17 +48,23 @@ public class UserDaoService {
         return users;
     }
 
-    public User findOne(Long userId) {
-        Predicate<? super User> predicate = user -> user.getId().equals(userId);
-
-        return users.stream().filter(predicate).findFirst().orElse(null);
-                // .orElseThrow(() -> new RuntimeException("User Not Found with the Given Id : " + userId))
-    }
-
     public User save(User user) {
         user.setId(++userCount);
         users.add(user);
 
         return user;
+    }
+
+    public User findOne(Long userId) {
+        Predicate<? super User> predicate = user -> user.getId().equals(userId);
+
+        return users.stream().filter(predicate).findFirst().orElse(null);
+        // .orElseThrow(() -> new RuntimeException("User Not Found with the Given Id : " + userId))
+    }
+
+    public void deleteById(Long userId) {
+        Predicate<? super User> predicate = user -> user.getId().equals(userId);
+
+        users.removeIf(predicate);
     }
 }

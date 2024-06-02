@@ -36,6 +36,12 @@ public class UserResourceController {
         return user;
     }
 
+    // Delete User By Id REST API
+    @DeleteMapping("/users/{id}")
+    public void deleteUserById(@PathVariable("id") Long userId) {
+        userDaoService.deleteById(userId);
+    }
+
     // Create User REST API
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user) {
