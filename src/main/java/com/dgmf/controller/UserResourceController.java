@@ -5,6 +5,10 @@ import com.dgmf.exception.UserNotFoundException;
 import com.dgmf.repository.UserDaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,16 +29,23 @@ public class UserResourceController {
 
     // Retrieve User By Id REST API
     @GetMapping("/users/{id}")
-    public User retrieveUserById(@PathVariable("id") Long userId) {
+    public EntityModel<User> retrieveUserById(@PathVariable("id") Long userId) {
         User user = userDaoService.findOne(userId);
 
-        if(user == null) {
-            throw new UserNotFoundException(
+        if(user == null) throw new UserNotFoundException(
                     "User Not Found with the Given Id : " + userId
             );
-        }
 
-        return user;
+        // HATEOAS
+        EntityModel<User> userEntityModel = EntityModel.of(user);
+        // Create a Link which Pointed to Controller Method
+        WebMvcLinkBuilder link = linkTo(
+                    methodOn(this.getClass())
+                    .retrieveAllUsers()
+                );
+        userEntityModel.add(link.withRel("all-users"));
+
+        return userEntityModel;
     }
 
     // Delete User By Id REST API
