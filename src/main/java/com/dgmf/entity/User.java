@@ -1,8 +1,10 @@
 package com.dgmf.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity(name = "user_details")
@@ -21,4 +24,7 @@ import java.time.LocalDate;
     private String name;
     @Past(message = "Birth Date Should Be in the Past")
     private LocalDate birthDate;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Post> posts;
 }
