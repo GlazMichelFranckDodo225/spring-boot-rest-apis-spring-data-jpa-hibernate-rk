@@ -3,6 +3,7 @@ package com.dgmf.controller;
 import com.dgmf.entity.User;
 import com.dgmf.exception.UserNotFoundException;
 import com.dgmf.repository.UserDaoService;
+import com.dgmf.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -21,25 +23,25 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RequestMapping("/jpa")
 public class UserJpaResourceController {
-    private final UserDaoService userDaoService;
+    private final UserRepository userRepository;
 
     // Retrieve All Users REST API
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
-        return userDaoService.findAll();
+        return userRepository.findAll();
     }
 
     // Retrieve User By Id REST API
     @GetMapping("/users/{id}")
     public EntityModel<User> retrieveUserById(@PathVariable("id") Long userId) {
-        User user = userDaoService.findOne(userId);
+        Optional<User> user = userRepository.findById(userId);
 
-        if(user == null) throw new UserNotFoundException(
+        if(user.isEmpty()) throw new UserNotFoundException(
                     "User Not Found with the Given Id : " + userId
             );
 
         // HATEOAS
-        EntityModel<User> userEntityModel = EntityModel.of(user);
+        EntityModel<User> userEntityModel = EntityModel.of(user.get());
         // Create a Link which Pointed to Controller Method
         WebMvcLinkBuilder link = linkTo(
                     methodOn(this.getClass())
@@ -53,13 +55,13 @@ public class UserJpaResourceController {
     // Delete User By Id REST API
     @DeleteMapping("/users/{id}")
     public void deleteUserById(@PathVariable("id") Long userId) {
-        userDaoService.deleteById(userId);
+        userRepository.deleteById(userId);
     }
 
     // Create User REST API
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        User savedUser = userDaoService.save(user);
+        User savedUser = userRepository.save(user);
 
         // To the URI of the Current Request
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
