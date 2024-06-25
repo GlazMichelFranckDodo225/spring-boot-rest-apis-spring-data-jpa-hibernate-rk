@@ -3,6 +3,7 @@ package com.dgmf.controller;
 import com.dgmf.entity.Post;
 import com.dgmf.entity.User;
 import com.dgmf.exception.UserNotFoundException;
+import com.dgmf.repository.PostRepository;
 import com.dgmf.repository.UserDaoService;
 import com.dgmf.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/jpa")
 public class UserJpaResourceController {
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     // Retrieve All Users REST API
     @GetMapping("/users")
@@ -82,6 +84,32 @@ public class UserJpaResourceController {
                 .path("/{id}")
                 // We Replace the Path Variable "id" by the Id of the Created User
                 .buildAndExpand(savedUser.getId())
+                // Convert into a URI and Returned Back the URI
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
+    // Create Post By User Id REST API
+    @PostMapping("/users/{id}/posts")
+    public ResponseEntity<Object> createPostByUserId(
+            @PathVariable("id") Long userId, @Valid @RequestBody Post post
+    ) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if(user.isEmpty()) throw new UserNotFoundException(
+                "User Not Found with the Given Id : " + userId
+        );
+
+        post.setUser(user.get());
+        Post savedPost = postRepository.save(post);
+
+        // To the URI of the Current Request
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                // We had the Path "/id"
+                .path("/{id}")
+                // We Replace the Path Variable "id" by the Id of the Created User
+                .buildAndExpand(savedPost.getId())
                 // Convert into a URI and Returned Back the URI
                 .toUri();
 
