@@ -14,7 +14,8 @@ public class Post {
     private Long id;
     private String title;
     private String shortDescription;
-    @ManyToOne(fetch = FetchType.LAZY)
+    // @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private User user;
 }

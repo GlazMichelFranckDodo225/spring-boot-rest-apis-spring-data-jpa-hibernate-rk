@@ -25,3 +25,36 @@ INSERT INTO user_details(
     current_date(),
     'Sathish'
 );
+INSERT INTO `post_details` (
+    id,
+    short_description,
+    title,
+    user_id
+) VALUES (
+    20001,
+    'I Want to Learn Multi Cloud',
+    'I Want to Learn Multi Cloud - Descritpion',
+    10001
+);
+INSERT INTO `post_details` (
+    id,
+    short_description,
+    title,
+    user_id
+) VALUES (
+    20002,
+    'I Want to Learn Spring Boot',
+    'I Want to Learn Spring Boot - Descritpion',
+    10002
+);
+INSERT INTO `post_details` (
+    id,
+    short_description,
+    title,
+    user_id
+) VALUES (
+    20003,
+    'I Want to Learn Spring Data JPA',
+    'I Want to Learn Spring Data JPA - Descritpion',
+    10003
+);

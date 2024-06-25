@@ -1,5 +1,6 @@
 package com.dgmf.controller;
 
+import com.dgmf.entity.Post;
 import com.dgmf.entity.User;
 import com.dgmf.exception.UserNotFoundException;
 import com.dgmf.repository.UserDaoService;
@@ -56,6 +57,18 @@ public class UserJpaResourceController {
     @DeleteMapping("/users/{id}")
     public void deleteUserById(@PathVariable("id") Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    // Retrieve Posts By User Id REST API
+    @GetMapping("/users/{id}/posts")
+    public List<Post> retrievePostsByUserId(@PathVariable("id") Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if(user.isEmpty()) throw new UserNotFoundException(
+                "User Not Found with the Given Id : " + userId
+        );
+
+        return user.get().getPosts();
     }
 
     // Create User REST API

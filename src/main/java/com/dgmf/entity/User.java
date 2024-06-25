@@ -1,6 +1,5 @@
 package com.dgmf.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,7 +16,7 @@ import java.util.List;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity(name = "user_details")
-    public class User {
+public class User {
     @Id @GeneratedValue
     private Long id;
     @Size(min = 2, message = "Name Should Have at Least 2 Characters")
@@ -25,6 +24,6 @@ import java.util.List;
     @Past(message = "Birth Date Should Be in the Past")
     private LocalDate birthDate;
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
+    // @JsonIgnore
     private List<Post> posts;
 }
