@@ -1,4 +1,4 @@
-package com.dgmf.config;
+package com.dgmf.config.app;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
